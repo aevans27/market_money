@@ -10,11 +10,11 @@ Rails.application.routes.draw do
       # get "/items/find_all", to: "items_lookup#index"
       # get "/items/find", to: "items_lookup#show"
       resources :markets, only: [:index, :show] do
-        # resources :items, only: [:index]
+        resources :vendors, only: [:index]
       end
 
-      resources :items do
-        resources :merchant, only: [:index], controller: "item_merchants"
+      resources :vendors, only: [:index, :show, :create, :destroy] do
+        # resources :merchant, only: [:index], controller: "item_merchants"
       end
     end
   end
