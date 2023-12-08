@@ -20,16 +20,10 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def create
-    # require 'pry';binding.pry
     if !Vendor.exists?(params[:vendor][:name])
       if params[:vendor][:contact_name] != nil && params[:vendor][:contact_phone] != nil
-        vendor = Vendor.new(name: params[:vendor][:name],
-        description: params[:vendor][:description],
-        contact_name: params[:vendor][:contact_name],
-        contact_phone: params[:vendor][:contact_phone],
-        credit_accepted: params[:vendor][:credit_accepted])
+        vendor = Vendor.new(vendor_params)
         if vendor.save
-          # require 'pry';binding.pry
           render json: VendorSerializer.new(vendor), status: 201
         else
           render json: {errors: "Something went wrong with vendor creation"}, status: 400
@@ -47,7 +41,6 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def destroy
-    # require 'pry';binding.pry
     if Vendor.exists?(params[:id])
       vendor = Vendor.find(params[:id])
       vendor.destroy
@@ -56,4 +49,29 @@ class Api::V0::VendorsController < ApplicationController
       render json: {errors: "The vendor you are looking for does not exist"}, status: 400
     end
   end
+
+  def update
+    # require 'pry';binding.pry
+    if Vendor.exists?(params[:id])
+      if params[:vendor][:contact_name] != nil && params[:vendor][:contact_phone] != nil
+        vendor = Vendor.update!(params[:id], vendor_params)
+        render json: VendorSerializer.new(vendor)
+      else
+        render json: {errors: "Missing contact name or number"}, status: 400
+      end
+    else
+      render json: {
+        "errors": [
+            {
+              "detail": "Couldn't find Vendor with 'id'= #{params[:id]}"
+            }
+         ]
+       }, status: 404
+    end
+  end
+
+  private
+    def vendor_params
+      params.require(:vendor).permit(:name, :description, :contact_name, :contact_phone, :credit_accepted)
+    end
 end
