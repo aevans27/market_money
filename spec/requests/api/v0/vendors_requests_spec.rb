@@ -28,15 +28,6 @@ describe "Internal api vendors" do
   
     expect(vendor[:attributes]).to have_key(:name)
     expect(vendor[:attributes][:name]).to be_an(String)
-
-    # expect(vendor[:attributes]).to have_key(:description)
-    # expect(vendor[:attributes][:description]).to be_an(String)
-
-    # expect(vendor[:attributes]).to have_key(:unit_price)
-    # expect(vendor[:attributes][:unit_price].to_f).to be_an(Float)
-
-    # expect(vendor[:attributes]).to have_key(:merchant_id)
-    # expect(vendor[:attributes][:merchant_id].to_i).to be_an(Integer)
   end
 
   it "vendor doesn't exist" do
@@ -116,5 +107,36 @@ describe "Internal api vendors" do
     expect(response.status).to eq(400)
     expect(vendor).to have_key(:errors)
     expect(vendor[:errors]).to eq("Missing contact name or number")
+  end
+
+  it "check for successful creation vendors" do
+    vendor_params = { name: "Bobs",
+    description: "Bobs place", contact_name: "Jim", contact_phone: "55555555", credit_accepted: true }
+    headers = {"CONTENT_TYPE" => "application/json"}
+  
+    # We include this header to make sure that these params are passed as JSON rather than as plain text
+    post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor_params)
+
+    expect(response).to be_successful
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    vendor = response_body[:data]
+    expect(vendor.count).to eq(3)
+
+      expect(vendor[:attributes]).to have_key(:contact_name)
+      expect(vendor[:attributes]).to have_key(:contact_phone)
+  end
+
+  it "check for failed creation vendors" do
+    vendor_params = { name: "Bobs",
+    description: "Bobs place", contact_name: nil, contact_phone: nil, credit_accepted: true }
+    headers = {"CONTENT_TYPE" => "application/json"}
+  
+    # We include this header to make sure that these params are passed as JSON rather than as plain text
+    post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor_params)
+
+    vendor = JSON.parse(response.body, symbolize_names: true)
+    expect(response.status).to eq(400)
+    expect(vendor).to have_key(:errors)
+    expect(vendor[:errors]).to eq([{:detail=>  "Validation failed: Contact name can't be blank, Contact phone can't be blank"}])
   end
 end

@@ -14,16 +14,11 @@ class Market < ApplicationRecord
   # validates_presence_of :vendor_count
 
   def vendor_count
-    if self.vendors != nil
       self.vendors.count
-    else
-      0
-    end
   end
 
   def self.find_by_name(name)
     self.where("name ILIKE ?", "%#{name}%")
-    #self.where(name: name)
   end
 
   def self.find_by_state(state)

@@ -23,7 +23,6 @@ class Api::V0::MarketsLookupController < ApplicationController
       render json: MarketSerializer.new(markets), headers: headers
     elsif params[:state].present?
       markets = Market.find_by_state(params[:state])
-      #  require 'pry';binding.pry
       render json: MarketSerializer.new(markets), headers: headers
     elsif params[:city].present?
       render json: {
@@ -40,7 +39,7 @@ class Api::V0::MarketsLookupController < ApplicationController
                 "detail": "Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint."
             }
         ]
-      }, status: 400
+      }, status: 422
     end
   end
 end

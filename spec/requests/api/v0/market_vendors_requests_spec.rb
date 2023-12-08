@@ -67,12 +67,16 @@ describe "Internal api market vendors" do
     expect{MarketVendor.find(mc.id)}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  # it "cant destroy an market_vendor that doesn't exists" do
-  #   delete "/api/v0/market_vendors"
+  it "cant destroy an market_vendor that doesn't exists" do
+    # mc = create(:market_vendor, market_id: market.id, vendor_id: vendor.id)
+    mc_params = { id: 0 }
+
+    headers = {"CONTENT_TYPE" => "application/json"}
+    delete "/api/v0/market_vendors", headers: headers, params: JSON.generate(mc_params)
   
-  #   mc = JSON.parse(response.body, symbolize_names: true)
-  #   expect(response.status).to eq(400)
-  #   expect(mc).to have_key(:errors)
-  #   expect(mc[:errors]).to eq("The vendor you are looking for does not exist")
-  # end
+    mc = JSON.parse(response.body, symbolize_names: true)
+    expect(response.status).to eq(400)
+    expect(mc).to have_key(:errors)
+    expect(mc[:errors]).to eq("The vendor you are looking for does not exist")
+  end
 end

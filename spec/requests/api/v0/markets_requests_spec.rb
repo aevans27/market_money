@@ -54,15 +54,6 @@ describe "Internal api Markets" do
     vendor_response.each do |vendor|
       expect(vendor[:attributes]).to have_key(:name)
       expect(vendor[:attributes][:name]).to be_an(String)
-
-      # expect(vendor[:attributes]).to have_key(:description)
-      # expect(vendor[:attributes][:description]).to be_an(String)
-
-      # expect(vendor[:attributes]).to have_key(:unit_price)
-      # expect(vendor[:attributes][:unit_price].to_f).to be_an(Float)
-
-      # expect(vendor[:attributes]).to have_key(:merchant_id)
-      # expect(vendor[:attributes][:merchant_id].to_i).to be_an(Integer)
     end
   end
 
