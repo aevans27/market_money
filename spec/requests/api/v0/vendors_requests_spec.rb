@@ -75,7 +75,6 @@ describe "Internal api vendors" do
     new_vendor = Vendor.find_by(id: vendor.id)
     expect(response.status).to eq(200)
     expect(response).to be_successful
-    # require 'pry';binding.pry
     expect(new_vendor.name).to_not eq(previous_name)
     expect(new_vendor.name).to eq("Bubba")
   end

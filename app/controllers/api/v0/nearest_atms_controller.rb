@@ -1,6 +1,5 @@
 class Api::V0::NearestAtmsController < ApplicationController
   def index
-    # require 'pry';binding.pry
     if Market.exists?(params[:market_id])
       market = Market.find(params[:market_id])
       facade = SearchFacade.new

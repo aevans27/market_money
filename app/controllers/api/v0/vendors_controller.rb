@@ -51,7 +51,6 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def update
-    # require 'pry';binding.pry
     if Vendor.exists?(params[:id])
       if params[:vendor][:contact_name] != nil && params[:vendor][:contact_phone] != nil
         vendor = Vendor.update!(params[:id], vendor_params)
